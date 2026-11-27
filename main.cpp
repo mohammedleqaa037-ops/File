@@ -1,46 +1,46 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
+#include <string>
+#include <cstdio>
 
 using namespace std;
 
-struct Student {
-    char name[20];
-    int id;
-    float grade;
-    char delim;
-};
-
 int main()
 {
-    ofstream outFile("student.txt", ios::app);
-    if (!outFile.is_open()){
-        cout<< "Error: Could not open students.txt for writing!"<< endl;
-        return 1;
+   ofstream outfile("Student.txt");
+   if(!outfile){
+     cout<< "Error creating the file!" <<endl;
+     return 1;
+   }
+
+   outfile<< "Ali Ahmed"<< endl;
+   outfile<< "Mohamed Rady"<< endl;
+   outfile<< "Youssef Zaki"<< endl;
+   outfile.close();
+
+   ifstream infile("Students.txt");
+   ofstream tempFile("temp.txt");
+
+   if(!infile|| !tempFile){
+     cout<< "Error opening files for deleting!"<< endl;
+     return 1;
     }
-    char choice ='y';
+   string line;
+   int currentLine=1;
+   int lineToDelete=1;
 
-    while (choice == 'y'||  choice== 'y'){
-        Student s;
-        s.delim='$';
-
-        cout<< "Enter student name:";
-        cin.ignore();
-        cin.getline(s.name, 20);
-
-        cout<< "Enter student ID:";
-        cin>> s.id;
-
-        cout<< "Enter student grade:";
-        cin>> s.grade;
-
-        outFile<< s.name<< ","<<s.id<<","<<s.grade<< ""<< s.delim<< endl;
-
-        cout<< "Do you want to add another student? (y/n):";
-        cin>> choice;
-
-        outFile.close();
-        cout<< "Student records saved to students.txt successfully!"<< endl;
+   while (getline(infile, line)){
+    if (currentLine =! lineToDelete){
+        tempFile<< line<< endl;
     }
+    currentLine++;
+   }
+   infile.close();
+   tempFile.close();
+
+   remove("Students.txt");
+   rename("temp.txt", "Students.txt");
+
+   cout<< "First name deleted successfully!"<< endl;
     return 0;
 }
